@@ -48,3 +48,41 @@ a {
 #root {
   min-height: 100vh;
 }
+
+.wave-panel {
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.95), transparent 34rem),
+    linear-gradient(120deg, #ffffff, #ece9e2, #f8f7f3, #ddd9d1, #ffffff);
+  background-size: 140% 140%, 260% 260%;
+  animation: wave-gradient 18s ease-in-out infinite alternate;
+}
+
+.text-row-fade {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.animate-text-row {
+  animation: row-fade-in 1500ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes wave-gradient {
+  0% {
+    background-position: 0% 50%, 0% 50%;
+  }
+
+  50% {
+    background-position: 55% 35%, 100% 50%;
+  }
+
+  100% {
+    background-position: 100% 60%, 35% 50%;
+  }
+}
+
+@keyframes row-fade-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

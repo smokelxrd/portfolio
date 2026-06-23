@@ -2,6 +2,13 @@ import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { useState } from 'react'
 import portrait from './assets/index.png'
 
+const profileLines = [
+  'Trecând prin experiența de 8 ani de muncă cu oamenii și 5 ani în marketing, am dobândit calități care m-au ajutat să cresc pe plan profesional și personal.',
+  'Am adus beneficii companiilor în cadrul cărora am activat, și am propus tehnici noi pentru atingerea obiectivelor.',
+  'Energia, dorința de dezvoltare continuă și capacitatea de instruire rapidă,',
+  'trăsăturile pe care le pun în practică pentru a-mi dezvălui personalitatea și pentru a aduce companiei idei actuale, interesante și cu rentabilitate înaltă.',
+]
+
 function App() {
   const [activePanel, setActivePanel] = useState(0)
 
@@ -106,32 +113,27 @@ function App() {
           </div>
         </section>
 
-        <section className="flex h-screen w-screen shrink-0 items-center overflow-hidden bg-[#f1eee8] px-6 py-10 text-zinc-950 sm:px-12 lg:px-20">
-          <div className="mx-auto grid w-full max-w-6xl gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
-            <div>
-              <p className="mb-5 text-sm font-semibold uppercase tracking-[0.32em] text-[#d95f16]">
-                Profile
-              </p>
-              <h2 className="max-w-3xl text-[clamp(3rem,8vw,8.5rem)] font-black uppercase leading-[0.86] tracking-[-0.07em]">
-                Strategy with presence.
-              </h2>
-            </div>
+        <section className="wave-panel flex h-screen w-screen shrink-0 items-center overflow-hidden px-6 py-10 text-zinc-950 sm:px-12 lg:px-20">
+          <div className="mx-auto w-full max-w-6xl">
+            <p className="mb-8 text-sm font-semibold uppercase tracking-[0.34em] text-[#d95f16]">
+              Despre mine
+            </p>
 
-            <div className="max-w-xl space-y-8 text-lg leading-8 text-zinc-700">
-              <p>
-                A clean second screen for the next portfolio chapter: experience,
-                services, selected campaigns, or case studies.
-              </p>
-              <div className="grid gap-4 sm:grid-cols-3">
-                {['Brand', 'Content', 'Growth'].map((item) => (
-                  <div
-                    className="border-t border-zinc-950/20 pt-4 text-sm font-semibold uppercase tracking-[0.2em] text-zinc-950"
-                    key={item}
-                  >
-                    {item}
-                  </div>
-                ))}
-              </div>
+            <div
+              className="space-y-3 text-[clamp(1.55rem,3.2vw,3.7rem)] font-semibold leading-[1.12] tracking-[-0.045em] text-zinc-950"
+              key={activePanel}
+            >
+              {profileLines.map((line, index) => (
+                <p
+                  className={`text-row-fade ${
+                    activePanel === 1 ? 'animate-text-row' : 'opacity-0'
+                  }`}
+                  key={line}
+                  style={{ animationDelay: `${index * 180}ms` }}
+                >
+                  {line}
+                </p>
+              ))}
             </div>
           </div>
         </section>
