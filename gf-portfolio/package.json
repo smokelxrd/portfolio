@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.1",
+    "@types/d3-contour": "^3.0.6",
     "clsx": "^2.1.1",
+    "d3-contour": "^4.0.2",
     "framer-motion": "^12.41.0",
     "lucide-react": "^1.21.0",
     "react": "^19.2.7",
