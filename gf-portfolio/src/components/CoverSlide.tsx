@@ -32,7 +32,7 @@ export function CoverSlide({ mobile = false }: CoverSlideProps) {
             <strong>Telefon :</strong> +373 79596223
           </p>
           <p>
-            <strong>Email :</strong> alionamatei05@gmail.com
+            <strong>Email :</strong> amatei.marketing@gmail.com
           </p>
           <p>
             <strong>Oraș :</strong> Chișinău

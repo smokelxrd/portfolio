@@ -90,8 +90,8 @@ export const contactLinks = [
   },
   {
     label: 'Email',
-    value: 'alionamatei05@gmail.com',
-    href: 'mailto:alionamatei05@gmail.com',
+    value: 'amatei.marketing@gmail.com',
+    href: 'mailto:amatei.marketing@gmail.com',
   },
   {
     label: 'Oraș',
