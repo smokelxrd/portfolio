@@ -13,29 +13,48 @@ type WorksSlideProps = {
   active?: boolean
   mobile?: boolean
   onBack?: () => void
+  onComplete?: () => void
+  onLastVideoChange?: (atEnd: boolean) => void
 }
 
 export function WorksSlide({
   active = true,
   mobile = false,
   onBack,
+  onComplete,
+  onLastVideoChange,
 }: WorksSlideProps) {
   if (mobile) {
-    return <MobileVideoFeed active={active} onBack={onBack} />
+    return (
+      <MobileVideoFeed
+        active={active}
+        onBack={onBack}
+        onComplete={onComplete}
+      />
+    )
   }
 
-  return <DesktopVideoShowcase active={active} />
+  return (
+    <DesktopVideoShowcase
+      active={active}
+      onLastVideoChange={onLastVideoChange}
+    />
+  )
 }
 
 function MobileVideoFeed({
   active,
   onBack,
+  onComplete,
 }: {
   active: boolean
   onBack?: () => void
+  onComplete?: () => void
 }) {
   const videoRefs = useRef<Array<HTMLVideoElement | null>>([])
   const hideUiTimerRef = useRef<number | null>(null)
+  const touchStartYRef = useRef<number | null>(null)
+  const activeVideoRef = useRef(0)
   const [failedVideos, setFailedVideos] = useState<Record<number, boolean>>({})
   const [muted, setMuted] = useState(true)
   const [uiVisible, setUiVisible] = useState(true)
@@ -90,6 +109,7 @@ function MobileVideoFeed({
           const video = entry.target as HTMLVideoElement
 
           if (entry.isIntersecting) {
+            activeVideoRef.current = Number(video.dataset.index ?? 0)
             void video.play()
             setUiVisible(true)
             scheduleUiHide()
@@ -121,7 +141,50 @@ function MobileVideoFeed({
   return (
     <section
       className="relative h-[100svh] w-full shrink-0 snap-y snap-mandatory overflow-y-auto overscroll-contain bg-black text-white [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      onWheel={(event) => {
+        if (activeVideoRef.current === 0 && event.deltaY < -18) {
+          event.preventDefault()
+          event.stopPropagation()
+          onBack?.()
+          return
+        }
+
+        if (activeVideoRef.current === works.length - 1 && event.deltaY > 18) {
+          event.preventDefault()
+          event.stopPropagation()
+          onComplete?.()
+        }
+      }}
       onPointerDown={revealUi}
+      onTouchEnd={(event) => {
+        const startY = touchStartYRef.current
+        const endY = event.changedTouches[0]?.clientY
+        touchStartYRef.current = null
+
+        if (
+          startY !== null &&
+          endY !== undefined &&
+          activeVideoRef.current === 0 &&
+          startY - endY < -56
+        ) {
+          event.stopPropagation()
+          onBack?.()
+          return
+        }
+
+        if (
+          startY !== null &&
+          endY !== undefined &&
+          activeVideoRef.current === works.length - 1 &&
+          startY - endY > 56
+        ) {
+          event.stopPropagation()
+          onComplete?.()
+        }
+      }}
+      onTouchStart={(event) => {
+        touchStartYRef.current = event.touches[0]?.clientY ?? null
+      }}
     >
       {onBack && (
         <button
@@ -152,6 +215,7 @@ function MobileVideoFeed({
               }
               playsInline
               preload={index === 0 ? 'auto' : 'metadata'}
+              data-index={index}
               ref={(node) => {
                 videoRefs.current[index] = node
               }}
@@ -217,10 +281,20 @@ function MobileVideoFeed({
   )
 }
 
-function DesktopVideoShowcase({ active }: { active: boolean }) {
+function DesktopVideoShowcase({
+  active,
+  onLastVideoChange,
+}: {
+  active: boolean
+  onLastVideoChange?: (atEnd: boolean) => void
+}) {
   const [selectedWork, setSelectedWork] = useState(0)
   const [failedVideos, setFailedVideos] = useState<Record<number, boolean>>({})
   const currentWork = works[selectedWork]
+
+  useEffect(() => {
+    onLastVideoChange?.(selectedWork === works.length - 1)
+  }, [onLastVideoChange, selectedWork])
 
   const goToPrevious = () => {
     setSelectedWork((current) => (current === 0 ? works.length - 1 : current - 1))
@@ -243,7 +317,7 @@ function DesktopVideoShowcase({ active }: { active: boolean }) {
           }`}
         >
           <p className="mb-5 text-sm font-semibold uppercase tracking-[0.34em] text-[#ff6418]">
-            Lucrari
+            Lucrări
           </p>
           <h2 className="max-w-3xl text-[clamp(4rem,8vw,8rem)] font-black uppercase leading-[0.82] tracking-[-0.06em] text-[#ff6418]">
             Video Showcase
@@ -273,7 +347,7 @@ function DesktopVideoShowcase({ active }: { active: boolean }) {
             </button>
             <button
               aria-label="Next video"
-              className="grid size-12 place-items-center rounded-full border border-white/12 bg-white/[0.055] text-white transition hover:border-[#ff6418]/50 hover:bg-white/10"
+              className="grid size-12 animate-sound-pulse place-items-center rounded-full border border-white/12 bg-white/[0.055] text-white transition hover:border-[#ff6418]/50 hover:bg-white/10"
               onClick={goToNext}
               type="button"
             >

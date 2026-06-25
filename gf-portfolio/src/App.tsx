@@ -1,14 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { AboutSlide } from './components/AboutSlide'
+import { ContactSlide } from './components/ContactSlide'
 import { CoverSlide } from './components/CoverSlide'
 import { EducationOverlay } from './components/EducationOverlay'
+import { ToolsSlide } from './components/ToolsSlide'
 import { WorksSlide } from './components/WorksSlide'
 
 function App() {
   const [activeSlide, setActiveSlide] = useState<0 | 1>(0)
-  const [desktopDetailSlide, setDesktopDetailSlide] = useState<0 | 1>(0)
-  const [mobileSlide, setMobileSlide] = useState<0 | 1 | 2>(0)
+  const [desktopDetailSlide, setDesktopDetailSlide] = useState<0 | 1 | 2 | 3>(0)
+  const [mobileSlide, setMobileSlide] = useState<0 | 1 | 2 | 3 | 4>(0)
+  const [desktopWorksAtEnd, setDesktopWorksAtEnd] = useState(false)
   const [educationOpen, setEducationOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const wheelDeltaRef = useRef(0)
@@ -43,6 +46,16 @@ function App() {
         lastGestureAtRef.current = now
         wheelDeltaRef.current = 0
 
+        if (mobileSlide >= 4) {
+          return
+        }
+
+        if (mobileSlide === 3) {
+          setMobileSlide(4)
+          setEducationOpen(false)
+          return
+        }
+
         if (mobileSlide === 0) {
           setMobileSlide(1)
           setEducationOpen(false)
@@ -63,6 +76,18 @@ function App() {
       if (wheelDeltaRef.current < -90) {
         lastGestureAtRef.current = now
         wheelDeltaRef.current = 0
+
+        if (mobileSlide === 4) {
+          setMobileSlide(3)
+          setEducationOpen(false)
+          return
+        }
+
+        if (mobileSlide === 3) {
+          setMobileSlide(2)
+          setEducationOpen(false)
+          return
+        }
 
         if (educationOpen) {
           setEducationOpen(false)
@@ -102,6 +127,16 @@ function App() {
       lastGestureAtRef.current = now
 
       if (deltaY > 0) {
+        if (mobileSlide >= 4) {
+          return
+        }
+
+        if (mobileSlide === 3) {
+          setMobileSlide(4)
+          setEducationOpen(false)
+          return
+        }
+
         if (mobileSlide === 0) {
           setMobileSlide(1)
           setEducationOpen(false)
@@ -122,6 +157,18 @@ function App() {
       }
 
       if (educationOpen) {
+        setEducationOpen(false)
+        return
+      }
+
+      if (mobileSlide === 4) {
+        setMobileSlide(3)
+        setEducationOpen(false)
+        return
+      }
+
+      if (mobileSlide === 3) {
+        setMobileSlide(2)
         setEducationOpen(false)
         return
       }
@@ -150,7 +197,7 @@ function App() {
   )
 
   const desktopDetailTransform = useMemo(
-    () => `translateY(-${desktopDetailSlide * 100}vh)`,
+    () => `translateX(-${desktopDetailSlide * 100}vw)`,
     [desktopDetailSlide],
   )
 
@@ -162,6 +209,16 @@ function App() {
       return
     }
 
+    if (desktopDetailSlide === 1) {
+      goToTools()
+      return
+    }
+
+    if (desktopDetailSlide === 2) {
+      goToContacts()
+      return
+    }
+
     setEducationOpen(true)
   }
 
@@ -169,16 +226,39 @@ function App() {
     setEducationOpen(false)
     setDesktopDetailSlide(1)
     setMobileSlide(2)
+    setDesktopWorksAtEnd(false)
+  }
+
+  const goToTools = () => {
+    lastGestureAtRef.current = Date.now()
+    wheelDeltaRef.current = 0
+    setEducationOpen(false)
+    setDesktopDetailSlide(2)
+    setMobileSlide(3)
+  }
+
+  const goToContacts = () => {
+    lastGestureAtRef.current = Date.now()
+    wheelDeltaRef.current = 0
+    setEducationOpen(false)
+    setDesktopDetailSlide(3)
+    setMobileSlide(4)
   }
 
   const goBackToMobileDetails = () => {
+    lastGestureAtRef.current = Date.now()
+    wheelDeltaRef.current = 0
     setMobileSlide(1)
     setEducationOpen(false)
   }
 
   const goBackOnDesktop = () => {
-    if (desktopDetailSlide === 1) {
-      setDesktopDetailSlide(0)
+    if (desktopDetailSlide > 0) {
+      setDesktopDetailSlide((current) => {
+        if (current === 3) return 2
+        if (current === 2) return 1
+        return 0
+      })
       setEducationOpen(false)
       return
     }
@@ -191,7 +271,7 @@ function App() {
     <main className="min-h-screen overflow-hidden bg-[#171717] text-zinc-100">
       <div className="h-[100svh] overflow-hidden lg:hidden">
         <div
-          className="h-[300svh] transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)]"
+          className="h-[500svh] transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)]"
           style={{ transform: mobileTransform }}
         >
           <CoverSlide mobile />
@@ -210,7 +290,14 @@ function App() {
             active={mobileSlide === 2}
             mobile
             onBack={goBackToMobileDetails}
+            onComplete={goToTools}
           />
+          <ToolsSlide
+            active={mobileSlide === 3}
+            mobile
+            onContact={goToContacts}
+          />
+          <ContactSlide active={mobileSlide === 4} />
         </div>
       </div>
 
@@ -222,7 +309,7 @@ function App() {
           <CoverSlide />
           <div className="relative h-screen w-screen shrink-0 overflow-hidden">
             <div
-              className="h-[200vh] transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)]"
+              className="flex h-screen w-[400vw] transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)]"
               style={{ transform: desktopDetailTransform }}
             >
               <div className="relative h-screen w-screen overflow-hidden">
@@ -234,7 +321,12 @@ function App() {
                   onWorks={goToWorks}
                 />
               </div>
-              <WorksSlide active={desktopDetailSlide === 1} />
+              <WorksSlide
+                active={desktopDetailSlide === 1}
+                onLastVideoChange={setDesktopWorksAtEnd}
+              />
+              <ToolsSlide active={desktopDetailSlide === 2} />
+              <ContactSlide active={desktopDetailSlide === 3} />
             </div>
           </div>
         </div>
@@ -250,7 +342,18 @@ function App() {
           </button>
         )}
 
-        {!educationOpen && desktopDetailSlide === 0 && (
+        {activeSlide === 0 && (
+          <div
+            aria-hidden="true"
+            className="pointer-events-none fixed inset-y-0 right-0 z-40 w-[18vw] animate-hero-edge-pulse bg-gradient-to-l from-[#ff6418]/20 via-[#ff6418]/8 to-transparent"
+          />
+        )}
+
+        {!educationOpen &&
+          (activeSlide === 0 ||
+            desktopDetailSlide === 0 ||
+            (desktopDetailSlide === 1 && desktopWorksAtEnd) ||
+            desktopDetailSlide === 2) && (
           <button
             aria-label="Continue"
             className={`fixed right-5 top-1/2 z-50 grid size-14 -translate-y-1/2 place-items-center rounded-full border shadow-2xl backdrop-blur transition hover:scale-105 ${

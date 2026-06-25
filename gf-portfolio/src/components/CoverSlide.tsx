@@ -35,13 +35,18 @@ export function CoverSlide({ mobile = false }: CoverSlideProps) {
             <strong>Email :</strong> alionamatei05@gmail.com
           </p>
           <p>
-            <strong>Oras :</strong> Chisinau
+            <strong>Oraș :</strong> Chișinău
           </p>
         </div>
 
         <p className="absolute bottom-[calc(10svh+env(safe-area-inset-bottom))] left-1/2 z-50 w-[96vw] -translate-x-1/2 whitespace-nowrap text-center text-[13.3vw] font-black uppercase leading-[0.75] tracking-[-0.005em] text-zinc-100">
           Portofoliu
         </p>
+
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-40 h-[18svh] animate-hero-bottom-pulse bg-gradient-to-t from-[#ff6418]/16 via-[#ff6418]/6 to-transparent"
+        />
 
         <div className="education-next-prompt animate-education-prompt absolute bottom-[calc(18px+env(safe-area-inset-bottom))] left-1/2 z-50 -translate-x-1/2 text-white">
           <ChevronsDown
@@ -84,18 +89,6 @@ export function CoverSlide({ mobile = false }: CoverSlideProps) {
             </div>
           </div>
 
-          <div className="absolute right-0 top-[56%] z-30 hidden max-w-xs text-lg leading-7 text-zinc-300 lg:block">
-            <p>
-              <strong className="text-zinc-100">Telefon :</strong> +373 79596223
-            </p>
-            <p>
-              <strong className="text-zinc-100">Email :</strong>{' '}
-              alionamatei05@gmail.com
-            </p>
-            <p>
-              <strong className="text-zinc-100">Oras :</strong> Chisinau
-            </p>
-          </div>
         </div>
 
         <div className="relative z-30 pb-4">
