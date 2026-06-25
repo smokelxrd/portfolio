@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   ChevronLeft,
-  ChevronRight,
   Play,
   Volume2,
   VolumeX,
@@ -14,7 +13,7 @@ type WorksSlideProps = {
   mobile?: boolean
   onBack?: () => void
   onComplete?: () => void
-  onLastVideoChange?: (atEnd: boolean) => void
+  desktopSelectedWork?: number
 }
 
 export function WorksSlide({
@@ -22,7 +21,7 @@ export function WorksSlide({
   mobile = false,
   onBack,
   onComplete,
-  onLastVideoChange,
+  desktopSelectedWork = 0,
 }: WorksSlideProps) {
   if (mobile) {
     return (
@@ -37,7 +36,7 @@ export function WorksSlide({
   return (
     <DesktopVideoShowcase
       active={active}
-      onLastVideoChange={onLastVideoChange}
+      selectedWork={desktopSelectedWork}
     />
   )
 }
@@ -283,26 +282,13 @@ function MobileVideoFeed({
 
 function DesktopVideoShowcase({
   active,
-  onLastVideoChange,
+  selectedWork,
 }: {
   active: boolean
-  onLastVideoChange?: (atEnd: boolean) => void
+  selectedWork: number
 }) {
-  const [selectedWork, setSelectedWork] = useState(0)
   const [failedVideos, setFailedVideos] = useState<Record<number, boolean>>({})
   const currentWork = works[selectedWork]
-
-  useEffect(() => {
-    onLastVideoChange?.(selectedWork === works.length - 1)
-  }, [onLastVideoChange, selectedWork])
-
-  const goToPrevious = () => {
-    setSelectedWork((current) => (current === 0 ? works.length - 1 : current - 1))
-  }
-
-  const goToNext = () => {
-    setSelectedWork((current) => (current === works.length - 1 ? 0 : current + 1))
-  }
 
   return (
     <section className="relative flex h-screen w-screen shrink-0 items-center overflow-hidden bg-[#171717] px-16 py-10 text-zinc-100">
@@ -336,31 +322,13 @@ function DesktopVideoShowcase({
             </p>
           </div>
 
-          <div className="mt-6 flex items-center gap-3">
-            <button
-              aria-label="Previous video"
-              className="grid size-12 place-items-center rounded-full border border-white/12 bg-white/[0.055] text-white transition hover:border-[#ff6418]/50 hover:bg-white/10"
-              onClick={goToPrevious}
-              type="button"
-            >
-              <ChevronLeft size={24} aria-hidden="true" />
-            </button>
-            <button
-              aria-label="Next video"
-              className="grid size-12 animate-sound-pulse place-items-center rounded-full border border-white/12 bg-white/[0.055] text-white transition hover:border-[#ff6418]/50 hover:bg-white/10"
-              onClick={goToNext}
-              type="button"
-            >
-              <ChevronRight size={24} aria-hidden="true" />
-            </button>
-            <div className="ml-3 flex gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-300">
+          <div className="mt-6 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-300">
               <span className="rounded-full border border-white/10 bg-white/[0.055] px-3 py-2">
                 {currentWork.format}
               </span>
               <span className="rounded-full border border-white/10 bg-white/[0.055] px-3 py-2">
                 {currentWork.metric}
               </span>
-            </div>
           </div>
         </div>
 

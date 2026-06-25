@@ -6,12 +6,13 @@ import { CoverSlide } from './components/CoverSlide'
 import { EducationOverlay } from './components/EducationOverlay'
 import { ToolsSlide } from './components/ToolsSlide'
 import { WorksSlide } from './components/WorksSlide'
+import { works } from './data/portfolio'
 
 function App() {
   const [activeSlide, setActiveSlide] = useState<0 | 1>(0)
   const [desktopDetailSlide, setDesktopDetailSlide] = useState<0 | 1 | 2 | 3>(0)
   const [mobileSlide, setMobileSlide] = useState<0 | 1 | 2 | 3 | 4>(0)
-  const [desktopWorksAtEnd, setDesktopWorksAtEnd] = useState(false)
+  const [desktopWorkIndex, setDesktopWorkIndex] = useState(0)
   const [educationOpen, setEducationOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const wheelDeltaRef = useRef(0)
@@ -210,6 +211,11 @@ function App() {
     }
 
     if (desktopDetailSlide === 1) {
+      if (desktopWorkIndex < works.length - 1) {
+        setDesktopWorkIndex((current) => current + 1)
+        return
+      }
+
       goToTools()
       return
     }
@@ -226,7 +232,7 @@ function App() {
     setEducationOpen(false)
     setDesktopDetailSlide(1)
     setMobileSlide(2)
-    setDesktopWorksAtEnd(false)
+    setDesktopWorkIndex(0)
   }
 
   const goToTools = () => {
@@ -254,6 +260,12 @@ function App() {
 
   const goBackOnDesktop = () => {
     if (desktopDetailSlide > 0) {
+      if (desktopDetailSlide === 1 && desktopWorkIndex > 0) {
+        setDesktopWorkIndex((current) => current - 1)
+        setEducationOpen(false)
+        return
+      }
+
       setDesktopDetailSlide((current) => {
         if (current === 3) return 2
         if (current === 2) return 1
@@ -323,7 +335,7 @@ function App() {
               </div>
               <WorksSlide
                 active={desktopDetailSlide === 1}
-                onLastVideoChange={setDesktopWorksAtEnd}
+                desktopSelectedWork={desktopWorkIndex}
               />
               <ToolsSlide active={desktopDetailSlide === 2} />
               <ContactSlide active={desktopDetailSlide === 3} />
@@ -352,7 +364,7 @@ function App() {
         {!educationOpen &&
           (activeSlide === 0 ||
             desktopDetailSlide === 0 ||
-            (desktopDetailSlide === 1 && desktopWorksAtEnd) ||
+            desktopDetailSlide === 1 ||
             desktopDetailSlide === 2) && (
           <button
             aria-label="Continue"
@@ -360,7 +372,7 @@ function App() {
               activeSlide === 0
                 ? 'border-white/20 bg-white/10 text-white shadow-black/30 hover:bg-white/20'
                 : 'border-zinc-950/10 bg-white/70 text-zinc-950 shadow-zinc-900/10 hover:bg-white/90'
-            }`}
+            } ${desktopDetailSlide === 1 ? 'animate-sound-pulse' : ''}`}
             onClick={goToNext}
             type="button"
           >
