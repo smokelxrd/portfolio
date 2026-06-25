@@ -80,6 +80,11 @@ a {
   transform: translateY(18px);
 }
 
+.text-row-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .animate-text-row {
   animation: row-fade-in 1500ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
@@ -120,6 +125,12 @@ a {
 
 .animate-hero-bottom-pulse {
   animation: hero-bottom-pulse 2800ms ease-in-out infinite;
+}
+
+.mobile-video-composite {
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  will-change: transform;
 }
 
 @keyframes wave-gradient {

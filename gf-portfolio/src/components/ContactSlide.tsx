@@ -10,9 +10,17 @@ const contactIcons = {
 
 type ContactSlideProps = {
   active?: boolean
+  mobile?: boolean
 }
 
-export function ContactSlide({ active = true }: ContactSlideProps) {
+export function ContactSlide({
+  active = true,
+  mobile = false,
+}: ContactSlideProps) {
+  const revealClass = mobile
+    ? 'text-row-visible'
+    : `text-row-fade ${active ? 'animate-text-row' : 'text-row-visible'}`
+
   return (
     <section className="relative flex h-[100svh] w-full shrink-0 items-center overflow-hidden bg-white px-5 py-8 text-zinc-950 sm:px-10 lg:h-screen lg:w-screen lg:px-20">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(255,100,24,0.12),transparent_25rem),radial-gradient(circle_at_18%_78%,rgba(255,100,24,0.16),transparent_29rem),linear-gradient(180deg,#ffffff_0%,#f8f7f4_58%,#ffffff_100%)]" />
@@ -20,9 +28,7 @@ export function ContactSlide({ active = true }: ContactSlideProps) {
 
       <div className="relative z-10 mx-auto grid w-full max-w-6xl gap-8 lg:grid-cols-[minmax(0,0.92fr)_minmax(320px,0.72fr)] lg:items-center lg:gap-16">
         <div
-          className={`text-row-fade ${
-            active ? 'animate-text-row' : 'opacity-0'
-          }`}
+          className={revealClass}
         >
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.34em] text-[#ff6418] sm:text-sm">
             Contacte
@@ -42,9 +48,7 @@ export function ContactSlide({ active = true }: ContactSlideProps) {
 
             return (
               <a
-                className={`text-row-fade group flex items-center gap-4 rounded-lg border border-zinc-950/10 bg-white/72 p-4 shadow-[0_18px_70px_rgba(23,23,23,0.12)] backdrop-blur transition hover:border-[#ff6418]/50 hover:bg-white sm:p-5 ${
-                  active ? 'animate-text-row' : 'opacity-0'
-                }`}
+                className={`${revealClass} group flex items-center gap-4 rounded-lg border border-zinc-950/10 bg-white/72 p-4 shadow-[0_18px_70px_rgba(23,23,23,0.12)] backdrop-blur transition hover:border-[#ff6418]/50 hover:bg-white sm:p-5`}
                 href={item.href}
                 key={item.label}
                 rel="noreferrer"

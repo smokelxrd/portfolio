@@ -41,6 +41,10 @@ export function ToolsSlide({
   mobile = false,
   onContact,
 }: ToolsSlideProps) {
+  const revealClass = mobile
+    ? 'text-row-visible'
+    : `text-row-fade ${active ? 'animate-text-row' : 'text-row-visible'}`
+
   return (
     <section className="relative flex h-[100svh] w-full shrink-0 items-center overflow-hidden bg-[#171717] py-8 text-zinc-100 lg:h-screen lg:w-screen">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(255,255,255,0.07),transparent_24rem),radial-gradient(circle_at_80%_76%,rgba(232,101,24,0.15),transparent_28rem),linear-gradient(180deg,#242424_0%,#151515_58%,#0e0e0e_100%)]" />
@@ -48,9 +52,7 @@ export function ToolsSlide({
 
       <div className="relative z-10 w-full">
         <div
-          className={`text-row-fade mx-auto mb-7 w-full max-w-6xl px-5 sm:mb-10 sm:px-10 lg:px-20 ${
-            active ? 'animate-text-row' : 'opacity-0'
-          }`}
+          className={`${revealClass} mx-auto mb-7 w-full max-w-6xl px-5 sm:mb-10 sm:px-10 lg:px-20`}
         >
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.34em] text-[#ff6418] sm:text-sm">
             Instrumente
@@ -63,9 +65,7 @@ export function ToolsSlide({
         <div className="w-screen space-y-5 sm:space-y-6 lg:space-y-8">
           {toolRows.map((row, index) => (
             <div
-              className={`text-row-fade overflow-hidden border-y border-white/10 py-4 sm:py-5 ${
-                active ? 'animate-text-row' : 'opacity-0'
-              }`}
+              className={`${revealClass} overflow-hidden border-y border-white/10 py-4 sm:py-5`}
               key={row.category}
               style={{ animationDelay: `${140 + index * 140}ms` }}
             >

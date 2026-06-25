@@ -185,7 +185,7 @@ function MobileVideoFeed({
         touchStartYRef.current = event.touches[0]?.clientY ?? null
       }}
     >
-      {onBack && (
+      {active && onBack && (
         <button
           aria-label="Back to portfolio"
           className={`fixed left-4 top-[calc(16px+env(safe-area-inset-top))] z-50 grid size-11 place-items-center rounded-full border border-white/15 bg-black/35 text-white backdrop-blur transition duration-500 active:scale-95 ${
@@ -200,13 +200,13 @@ function MobileVideoFeed({
 
       {works.map((item, index) => (
         <article
-          className="relative flex h-[100svh] snap-start snap-always items-end overflow-hidden bg-zinc-950"
+          className="relative isolate flex h-[100svh] snap-start snap-always items-end overflow-hidden bg-zinc-950"
           key={item.title}
         >
           {!failedVideos[index] && (
             <video
               aria-label={item.title}
-              className="absolute inset-0 h-full w-full object-cover"
+              className="mobile-video-composite absolute inset-0 z-0 h-full w-full object-cover"
               loop
               muted={muted}
               onError={() =>
@@ -223,19 +223,16 @@ function MobileVideoFeed({
           )}
 
           {failedVideos[index] && (
-            <div className="absolute inset-0">
+            <div className="absolute inset-0 z-0">
               <VideoFallback index={index} title={item.title} />
             </div>
           )}
 
-          <div
-            className={`pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.22)_0%,transparent_46%,rgba(0,0,0,0.86)_100%)] transition-opacity duration-700 ${
-              uiVisible ? 'opacity-100' : 'opacity-0'
-            }`}
-          />
+          <div className="mobile-video-composite pointer-events-none absolute inset-x-0 top-0 z-10 h-[24svh] bg-gradient-to-b from-black/28 to-transparent" />
+          <div className="mobile-video-composite pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[48svh] bg-gradient-to-t from-black/90 via-black/54 to-transparent" />
 
           <div
-            className={`relative z-10 mb-[calc(7svh+env(safe-area-inset-bottom))] flex max-h-[30svh] w-full flex-col justify-end overflow-hidden px-5 transition duration-700 ${
+            className={`relative z-20 mb-[calc(7svh+env(safe-area-inset-bottom))] flex max-h-[36svh] w-full flex-col justify-end overflow-visible px-5 transition duration-700 ${
               uiVisible
                 ? 'translate-y-0 opacity-100'
                 : 'pointer-events-none translate-y-4 opacity-0'
@@ -245,10 +242,13 @@ function MobileVideoFeed({
               {String(index + 1).padStart(2, '0')} /{' '}
               {String(works.length).padStart(2, '0')}
             </p>
-            <h2 className="mt-2 max-w-[82vw] text-[clamp(1.65rem,8.8vw,2.8rem)] font-black uppercase leading-[0.84] tracking-[-0.045em] text-white">
+            <h2 className="mt-2 max-w-[82vw] text-[clamp(1.5rem,7.8vw,2.55rem)] font-black uppercase leading-[1.06] tracking-[-0.025em] text-white">
               {item.title}
             </h2>
-            <p className="mt-3 max-w-[82vw] text-sm leading-5 text-zinc-100">
+            <p className="mt-2 max-w-[82vw] text-[0.82rem] font-semibold uppercase tracking-[0.12em] text-[#ff6418]">
+              {item.subtitle}
+            </p>
+            <p className="mt-2 max-w-[82vw] text-sm leading-5 text-zinc-100">
               {item.description}
             </p>
             <div className="mt-3 flex items-center gap-2 text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-white">
@@ -299,7 +299,7 @@ function DesktopVideoShowcase({
       <div className="relative z-10 mx-auto grid w-full max-w-6xl grid-cols-[minmax(0,1fr)_minmax(280px,390px)] items-center gap-14">
         <div
           className={`text-row-fade ${
-            active ? 'animate-text-row' : 'opacity-0'
+            active ? 'animate-text-row' : 'text-row-visible'
           }`}
         >
           <p className="mb-5 text-sm font-semibold uppercase tracking-[0.34em] text-[#ff6418]">
@@ -314,10 +314,13 @@ function DesktopVideoShowcase({
               {String(selectedWork + 1).padStart(2, '0')} /{' '}
               {String(works.length).padStart(2, '0')}
             </p>
-            <h3 className="mt-4 text-5xl font-black uppercase leading-none tracking-[-0.05em] text-white">
+            <h3 className="mt-4 text-[clamp(2.5rem,3.9vw,4rem)] font-black uppercase leading-[1.08] tracking-[-0.03em] text-white">
               {currentWork.title}
             </h3>
-            <p className="mt-5 text-lg leading-8 text-zinc-300">
+            <p className="mt-4 text-2xl font-semibold uppercase tracking-[0.12em] text-[#ff6418]">
+              {currentWork.subtitle}
+            </p>
+            <p className="mt-4 text-lg leading-8 text-zinc-300">
               {currentWork.description}
             </p>
           </div>
@@ -334,7 +337,7 @@ function DesktopVideoShowcase({
 
         <div
           className={`text-row-fade relative aspect-[9/16] w-full overflow-hidden rounded-[22px] border border-white/15 bg-zinc-950 shadow-[0_30px_90px_rgba(0,0,0,0.44)] ${
-            active ? 'animate-text-row' : 'opacity-0'
+            active ? 'animate-text-row' : 'text-row-visible'
           }`}
           style={{ animationDelay: '120ms' }}
         >

@@ -309,7 +309,7 @@ function App() {
             mobile
             onContact={goToContacts}
           />
-          <ContactSlide active={mobileSlide === 4} />
+          <ContactSlide active={mobileSlide === 4} mobile />
         </div>
       </div>
 

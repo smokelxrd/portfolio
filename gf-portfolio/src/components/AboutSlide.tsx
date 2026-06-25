@@ -21,13 +21,10 @@ export function AboutSlide({
             </p>
 
             <div className="space-y-3 text-[clamp(1.15rem,4.4vw,2rem)] font-semibold leading-[1.22] tracking-[-0.035em] text-zinc-950">
-              {profileLines.map((line, index) => (
+              {profileLines.map((line) => (
                 <p
-                  className={`text-row-fade ${
-                    active ? 'animate-text-row' : 'opacity-0'
-                  }`}
+                  className="text-row-visible"
                   key={line}
-                  style={{ animationDelay: `${index * 170}ms` }}
                 >
                   {line}
                 </p>
@@ -51,7 +48,7 @@ export function AboutSlide({
           {profileLines.map((line, index) => (
             <p
               className={`text-row-fade ${
-                active ? 'animate-text-row' : 'opacity-0'
+                active ? 'animate-text-row' : 'text-row-visible'
               }`}
               key={line}
               style={{ animationDelay: `${index * 180}ms` }}
